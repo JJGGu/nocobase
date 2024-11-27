@@ -3,60 +3,35 @@ networks:
   nocobase:
     driver: bridge
 services:
-  verdaccio:
-    image: verdaccio/verdaccio
+  app:
+    image: nocobase/nocobase:latest
     networks:
       - nocobase
+    depends_on:
+      - mysql
     environment:
-      VERDACCIO_PORT: ${VERDACCIO_PORT}
-    restart: always
+      - APP_KEY=your-secret-key # Replace it with your own app key
+      - ENCRYPTION_FIELD_KEY=your-secret-key # Replace it with your own app key
+      - DB_DIALECT=mysql
+      - DB_HOST=mysql
+      - DB_DATABASE=nocobase
+      - DB_USER=root
+      - DB_PASSWORD=nocobase
+      - DB_TIMEZONE=+08:00
+    volumes:
+      - ./storage:/app/nocobase/storage
     ports:
-      - "${VERDACCIO_PORT}:${VERDACCIO_PORT}"
+      - "13000:80"
+    init: true
   mysql:
-    image: mysql:8
+    image: mysql:latest
     environment:
-      MYSQL_DATABASE: ${DB_DATABASE}
-      MYSQL_USER: ${DB_USER}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: nocobase
+      MYSQL_USER: nocobase
+      MYSQL_PASSWORD: nocobase
+      MYSQL_ROOT_PASSWORD: nocobase
     restart: always
-    ports:
-      - "${DB_MYSQL_PORT}:3306"
-    networks:
-      - nocobase
-  postgres:
-    image: postgres:latest
-    restart: always
-    networks:
-      - nocobase
-    command: postgres -c wal_level=logical
-    ports:
-      - "${DB_POSTGRES_PORT}:5432"
     volumes:
-      - ./storage/db/postgres/backups:/backups
-    environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_DB: ${DB_DATABASE}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-  adminer:
-    image: nocobase/adminer
-    restart: always
+      - ./storage/db/mysql:/var/lib/mysql
     networks:
       - nocobase
-    ports:
-      - ${ADMINER_PORT}:8080
-    volumes:
-      - ./:/var/www/app
-  nocobase:
-    image: node:16-stretch-slim
-    networks:
-      - nocobase
-    command: [ "yarn", "start" ]
-    working_dir: /app
-    env_file: ./.env
-    volumes:
-      - ./:/app
-    expose:
-      - ${APP_PORT}
-    ports:
-      - "${APP_PORT}:${APP_PORT}"

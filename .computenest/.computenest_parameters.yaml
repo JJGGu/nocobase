@@ -1,1 +1,0 @@
-{"ServiceType":"private","AllowedRegions":["cn-hangzhou","cn-shanghai","cn-beijing"],"ArtifactSourceType":"DockerCompose","RepoName":"JJGGu/nocobase","Arch":"EcsSingle","DockerComposeEnvPath":".env.example","RegionId":"cn-hangzhou","CustomParameters":"","DockerComposeYamlPath":"docker-compose.yml"}
