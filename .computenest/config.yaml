@@ -1,0 +1,61 @@
+Service:
+  RegionId: cn-hangzhou
+  DeployType: ros
+  OperationMetadata:
+    StatusOperationConfigs:
+      - TemplateName: '单机版'
+        SupportOperations:
+          - Start
+          - Stop
+          - Restart
+    SupportBackup: true
+  DeployMetadata:
+    SupplierDeployMetadata:
+      FileArtifactRelation:
+        '{{ computenest::file::JJGGu_nocobase-docker-compose }}':
+          ArtifactId: ${Artifact.Artifact_1.ArtifactId}
+          ArtifactVersion: ${Artifact.Artifact_1.ArtifactVersion}
+    TemplateConfigs:
+      - Name: 单机版
+        Url: 'ros_templates/template.yaml'
+        AllowedRegions:
+          - cn-hangzhou
+          - cn-shanghai
+          - cn-beijing
+  ServiceType: private
+  ServiceInfo:
+    Locale: zh-CN
+    ShortDescription: docker compose deploy
+    Image: 'resources/icons/service_logo.png'
+Artifact:
+  Artifact_1:
+    ArtifactType: File
+    ArtifactName: JJGGu_nocobase-docker-compose
+    ArtifactProperty:
+      RegionId: cn-hangzhou
+      Url: 'resources/artifact_resources/docker_compose.tar'
+  Artifact_2:
+    ArtifactType: AcrImage
+    ArtifactName: AcrImage-nocobase-nocobase
+    ArtifactProperty:
+      RepoName: ${AcrImageBuilder.AcrImage_1.RepoName}
+      Tag: ${AcrImageBuilder.AcrImage_1.Tag}
+      RepoType: Public
+  Artifact_3:
+    ArtifactType: AcrImage
+    ArtifactName: AcrImage-mysql
+    ArtifactProperty:
+      RepoName: ${AcrImageBuilder.AcrImage_2.RepoName}
+      Tag: ${AcrImageBuilder.AcrImage_2.Tag}
+      RepoType: Public
+AcrImageBuilder:
+  AcrImage_1:
+    BuildType: DockerRepo
+    DockerRepoUrl: nocobase/nocobase:latest
+    RepoName: nocobase/nocobase
+    Tag: latest
+  AcrImage_2:
+    BuildType: DockerRepo
+    DockerRepoUrl: mysql:latest
+    RepoName: mysql
+    Tag: latest
