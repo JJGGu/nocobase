@@ -1,0 +1,8 @@
+ArtifactSourceType: DockerCompose
+RepoName: nocobase/nocobase
+Platform: github
+Branch: main
+ServiceType: private
+DockerComposeYamlPath: docker/app-postgres/docker-compose.yml
+RegionId: cn-hangzhou
+ServiceBuildRegion: ap-southeast-1
